@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<h1 class="h4">Eliminar contacto</h1><p>¿Eliminar <strong>{{ contact.name }}</strong> (<code>{{ contact.email }}</code>)?</p><form method="post">{% csrf_token %}<button class="btn btn-danger" type="submit">Sí, eliminar</button><a class="btn btn-outline-secondary" href="{% url 'contacts:list' %}">Cancelar</a></form>{% endblock %}

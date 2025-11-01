@@ -1,0 +1,3 @@
+name,email,phone,address,tags,photo_url
+Juan Pérez,juan@example.com,+56911111111,Santiago,"Cliente;VIP",https://example.com/juan.jpg
+Ana López,ana@example.com,+56922222222,Valparaíso,Proveedor,

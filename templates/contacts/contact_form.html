@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="h4 mb-3">{{ title }}</h1>
+<form method="post" enctype="multipart/form-data" novalidate>
+  {% csrf_token %}
+  <div class="row g-3">
+    <div class="col-md-6">
+      <label class="form-label">Nombre</label>
+      {{ form.name }}
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Email</label>
+      {{ form.email }}
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Teléfono</label>
+      {{ form.phone }}
+      <div class="form-text">Formato E.164, ej: +56912345678</div>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Dirección</label>
+      {{ form.address }}
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Subir foto (Supabase Storage)</label>
+      {{ form.photo_file }}
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">O pegar URL pública de la foto</label>
+      {{ form.photo_url }}
+    </div>
+    <div class="col-12">
+      <label class="form-label">Etiquetas</label>
+      {{ form.tags }}
+      <div class="form-text">¿Falta una etiqueta? <a href="{% url 'contacts:tag_create' %}">Crear etiqueta</a></div>
+    </div>
+  </div>
+  <div class="mt-3 d-flex gap-2">
+    <button class="btn btn-primary" type="submit">Guardar</button>
+    <a class="btn btn-outline-secondary" href="{% url 'contacts:list' %}">Volver</a>
+  </div>
+</form>
+{% endblock %}

@@ -1,0 +1,11 @@
+[build]
+builder = "NIXPACKS"
+
+[deploy]
+numReplicas = 1
+startCommand = "gunicorn core.wsgi:application --bind 0.0.0.0:$PORT"
+healthcheckPath = "/"
+healthcheckTimeout = 300
+
+[deploy.hooks]
+postDeploy = "python manage.py migrate && python manage.py collectstatic --noinput"

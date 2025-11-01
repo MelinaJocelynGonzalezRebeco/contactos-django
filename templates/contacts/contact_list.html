@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h4">Contactos</h1>
+  <a class="btn btn-primary" href="{% url 'contacts:create' %}">Nuevo</a>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-md-6">
+    <form class="d-flex" method="get">
+      <input type="hidden" name="tag" {% if selected_tag %}value="{{ selected_tag.slug }}"{% endif %}>
+      <input class="form-control me-2" type="search" name="q" placeholder="Buscar por nombre o email" value="{{ q }}">
+      <button class="btn btn-outline-secondary">Buscar</button>
+    </form>
+  </div>
+  <div class="col-md-6 text-md-end">
+    <div class="btn-group">
+      <a class="btn btn-outline-secondary {% if not selected_tag %}active{% endif %}" href="?q={{ q }}">Todas</a>
+      {% for t in all_tags %}
+        <a class="btn btn-outline-secondary {% if selected_tag and selected_tag.slug == t.slug %}active{% endif %}" href="?q={{ q }}&tag={{ t.slug }}">{{ t.name }}</a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-striped align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th>Teléfono</th>
+          <th>Dirección</th>
+          <th>Etiquetas</th>
+          <th>Foto</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for contact in page_obj %}
+        <tr>
+          <td>{{ contact.name }}</td>
+          <td>{{ contact.email }}</td>
+          <td>{{ contact.phone }}</td>
+          <td>{{ contact.address|default:'—' }}</td>
+          <td>
+            {% for tag in contact.tags.all %}
+              <span class="badge text-bg-secondary">{{ tag.name }}</span>
+            {% empty %}
+              <span class="text-muted">Sin etiquetas</span>
+            {% endfor %}
+          </td>
+          <td>
+            {% if contact.photo_url %}
+              <img src="{{ contact.photo_url }}" alt="Foto" class="rounded" style="width:40px;height:40px;object-fit:cover;">
+            {% else %}
+              <span class="text-muted">—</span>
+            {% endif %}
+          </td>
+          <td class="text-end">
+            <a class="btn btn-sm btn-outline-secondary" href="{% url 'contacts:update' contact.pk %}">Editar</a>
+            <a class="btn btn-sm btn-outline-danger" href="{% url 'contacts:delete' contact.pk %}">Borrar</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="text-center text-muted py-3">Sin resultados.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<nav aria-label="Paginación" class="mt-3">
+  <ul class="pagination justify-content-center">
+    {% if page_obj.has_previous %}
+      <li class="page-item"><a class="page-link" href="?q={{ q }}{% if selected_tag %}&tag={{ selected_tag.slug }}{% endif %}&page={{ page_obj.previous_page_number }}">Anterior</a></li>
+    {% else %}
+      <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+    {% endif %}
+    <li class="page-item disabled"><span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span></li>
+    {% if page_obj.has_next %}
+      <li class="page-item"><a class="page-link" href="?q={{ q }}{% if selected_tag %}&tag={{ selected_tag.slug }}{% endif %}&page={{ page_obj.next_page_number }}">Siguiente</a></li>
+    {% else %}
+      <li class="page-item disabled"><span class="page-link">Siguiente</span></li>
+    {% endif %}
+  </ul>
+</nav>
+{% endblock %}
